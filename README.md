@@ -21,3 +21,5 @@ to encapsulate data and behaviors together inside a
 single self-contained unit more often referred to as
 an instance in a bid to manage complexity through the
 constructs afforded by object oriented programming.
+
+Source available at https://github.com/ndhorne
