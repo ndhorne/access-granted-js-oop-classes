@@ -119,6 +119,7 @@ class Game {
   newGame(event) {
     event.preventDefault();
     this.initGame();
+    this.updateDisplay();
   }
   
   about(event) {
