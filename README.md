@@ -22,4 +22,5 @@ single self-contained unit more often referred to as
 an instance in a bid to manage complexity through the
 constructs afforded by object oriented programming.
 
-Source available at https://github.com/ndhorne
+GNU GPLv3 licensed source code available at
+https://github.com/ndhorne/access-granted-js-oop-classes
