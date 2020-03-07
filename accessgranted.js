@@ -27,10 +27,13 @@ class Game {
     this.lcd = document.getElementById("lcd");
     this.resetDisplayTimeout;
     
+    //initializes buttons array with references to button elements
     for (let i = 0; i < 10; i++) {
       this.buttons[i] = document.getElementById("button" + i);
     }
     
+    //wires up button elements with callback function to update entry
+    //through forEach higher order function
     this.buttons.forEach(button => {
       button.addEventListener("click", event => {
         if (this.entry.length < 4) {
@@ -40,6 +43,8 @@ class Game {
       });
     });
     
+    //wires up keyboard number keys with callback function to update
+    //entry
     window.addEventListener("keydown", event => {
       if (/^\d$/.test(event.key)) {
         if (this.entry.length < 4) {
@@ -50,11 +55,15 @@ class Game {
     });
   }
   
+  //updates lcd div element with current entry
   updateDisplay() {
     this.lcd.style.backgroundColor = "darkgrey";
     this.lcd.textContent = this.entry;
   }
   
+  //upon key input clears timeout to reset display(if any), updates
+  //display with current entry, and when four digits in length verifies
+  //entry after half-second timeout
   keyIn() {
     clearTimeout(this.resetDisplayTimeout);
     this.updateDisplay();
@@ -63,6 +72,7 @@ class Game {
     }
   }
   
+  //highlights button elements corresponding to keys contained in PIN
   highlightKeys() {
     this.buttons.forEach(button => {
       button.style.backgroundColor = "";
@@ -73,10 +83,12 @@ class Game {
     }
   }
   
+  //updates array of entered entries
   updateEntries() {
     this.entries.push(this.entry);
   }
   
+  //returns randomly generated PIN
   pinGen() {
     let pin = "";
     for (let i = 0; i < 4; i++) {
@@ -87,6 +99,7 @@ class Game {
     return pin;
   }
   
+  //initializes new game
   initGame() {
     this.pin = this.pinGen();
     this.entry = "";
@@ -94,6 +107,11 @@ class Game {
     this.highlightKeys();
   }
   
+  //verifies whether entry matches PIN, updates and sets timeout to
+  //clear display accordingly, updates array of entered entries,
+  //displays win dialog and reinitializes game upon success, clears
+  //entry upon failure, returns analogous boolean value for use with
+  //auto-solve
   verifyEntry(fiatEntry) {
     if (fiatEntry) {
       this.entry = fiatEntry;
@@ -123,12 +141,14 @@ class Game {
     }
   }
   
+  //initializes new game and clears display
   newGame(event) {
     this.initGame();
     this.updateDisplay();
     event.preventDefault();
   }
   
+  //displays about dialog
   about(event) {
     let aboutText =
       "Access Granted JS \"Classified\" (Encapsulated)\n" +
@@ -159,6 +179,7 @@ class Game {
     event.preventDefault();
   }
   
+  //returns array of unique PIN digits
   getUniqueDigits() {
     let uniqueDigits = [];
     
@@ -171,6 +192,7 @@ class Game {
     return uniqueDigits;
   }
   
+  //returns array of all possible combinations of unique PIN digits
   inferAbsentDigits() {
     let uniqueDigits = this.getUniqueDigits();
     let inferences = [];
@@ -198,6 +220,8 @@ class Game {
     return inferences;
   }
   
+  //sequentially attempts all possible permutations of each combination
+  //until solved
   autoSolveSequential(event) {
     let inferences = this.inferAbsentDigits();
     let solved = false;
@@ -251,6 +275,8 @@ class Game {
     event.preventDefault();
   }
   
+  //sequentially creates array of all possible permutations of each
+  //combination and attempts each permutation until solved
   autoSolveSequential2(event) {
     let inferences = this.inferAbsentDigits();
     let permutations = [];
@@ -299,6 +325,8 @@ class Game {
     event.preventDefault();
   }
   
+  //randomly generates all possible permutations of each combination and
+  //attempts unentered permutations until solved
   autoSolveRandom(event) {
     let uniqueDigits = this.getUniqueDigits();
     let inferences = this.inferAbsentDigits();
@@ -346,6 +374,8 @@ class Game {
     event.preventDefault();
   }
   
+  //randomly generates entries from unique PIN digits and attempts
+  //unentered entries until solved
   autoSolveRandom2(event) {
     let uniqueDigits = this.getUniqueDigits();
     let solved = false;
@@ -363,6 +393,8 @@ class Game {
     event.preventDefault();
   }
   
+  //randomly generates entries from all digits and attempts unentered
+  //entries until solved
   autoSolveRandom3(event) {
     let solved = false;
     
@@ -379,10 +411,12 @@ class Game {
     event.preventDefault();
   }
   
+  //logs to console duration of auto-solve methods in milliseconds
   autoSolveBenchmarks() {
     let startTime, endTime;
     let benchpin = this.pinGen();
     
+    //suppress win dialog box
     this.silent = true;
     
     this.pin = benchpin;
@@ -423,11 +457,13 @@ class Game {
     this.silent = false;
   }
   
+  //initializes first game
   start() {
     this.initGame();
   }
 }
 
+//instantiate and initiate new instance of game
 let game = new Game();
 game.start();
 
