@@ -55,7 +55,7 @@ class Game {
     });
   }
   
-  //updates lcd div element with current entry
+  //updates #lcd div element with current entry
   updateDisplay() {
     this.lcd.style.backgroundColor = "darkgrey";
     this.lcd.textContent = this.entry;
@@ -325,8 +325,8 @@ class Game {
     event.preventDefault();
   }
   
-  //randomly generates all possible permutations of each combination and
-  //attempts unentered permutations until solved
+  //randomly generates all possible permutations of each combination
+  //while attempting unentered permutations until solved
   autoSolveRandom(event) {
     let uniqueDigits = this.getUniqueDigits();
     let inferences = this.inferAbsentDigits();
@@ -415,44 +415,27 @@ class Game {
   autoSolveBenchmarks() {
     let startTime, endTime;
     let benchpin = this.pinGen();
+    let autoSolveMethods = [];
+    
+    autoSolveMethods.push(this.autoSolveSequential);
+    autoSolveMethods.push(this.autoSolveSequential2);
+    autoSolveMethods.push(this.autoSolveRandom);
+    autoSolveMethods.push(this.autoSolveRandom2);
+    autoSolveMethods.push(this.autoSolveRandom3);
     
     //suppress win dialog box
     this.silent = true;
     
-    this.pin = benchpin;
-    startTime = Date.now();
-    this.autoSolveSequential(new CustomEvent("CustomEvent"));
-    endTime = Date.now();
-    console.log("autoSolveSequential  (" + benchpin + ") : " +
-      +(endTime - startTime) + "ms");
-    
-    this.pin = benchpin;
-    startTime = Date.now();
-    this.autoSolveSequential2(new CustomEvent("CustomEvent"));
-    endTime = Date.now();
-    console.log("autoSolveSequential2 (" + benchpin + ") : " +
-      +(endTime - startTime) + "ms");
-    
-    this.pin = benchpin;
-    startTime = Date.now();
-    this.autoSolveRandom(new CustomEvent("CustomEvent"));
-    endTime = Date.now();
-    console.log("autoSolveRandom      (" + benchpin + ") : " +
-      +(endTime - startTime) + "ms");
-    
-    this.pin = benchpin;
-    startTime = Date.now();
-    this.autoSolveRandom2(new CustomEvent("CustomEvent"));
-    endTime = Date.now();
-    console.log("autoSolveRandom2     (" + benchpin + ") : " +
-      +(endTime - startTime) + "ms");
-    
-    this.pin = benchpin;
-    startTime = Date.now();
-    this.autoSolveRandom3(new CustomEvent("CustomEvent"));
-    endTime = Date.now();
-    console.log("autoSolveRandom3     (" + benchpin + ") : " +
-      +(endTime - startTime) + "ms");
+    for (let i = 0; i < autoSolveMethods.length; i++) {
+      this.pin = benchpin;
+      startTime = Date.now();
+      autoSolveMethods[i].call(this, new CustomEvent("CustomEvent"));
+      endTime = Date.now();
+      console.log(autoSolveMethods[i].name +
+        " ".repeat(21 - autoSolveMethods[i].name.length) +
+        "(" + benchpin + ") : " +
+        +(endTime - startTime) + "ms");
+    }
     
     this.silent = false;
   }
