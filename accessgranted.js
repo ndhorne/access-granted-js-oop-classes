@@ -167,7 +167,7 @@ class Game {
       "\n" +
       "This new but not necessarily improved " +
       "implementation of Access Granted JS leverages " +
-      "ECMAScript 6 classes to encapsulate data and " +
+      "ECMAScript 6 classes to encapsulate associated data and " +
       "behaviors together inside a single " +
       "self-contained unit more often referred to as an " +
       "instance in a bid to manage complexity through " +
@@ -220,6 +220,25 @@ class Game {
     return inferences;
   }
   
+  //shifts digits of base combination to exhaust permutations
+  shiftBase(base, pass) {
+    let current;
+    
+    if (pass == 0) {
+      current = base;
+    } else if (pass == 1) {
+      current = base[1] + base[0] + base[2] + base[3];
+    } else if (pass == 2) {
+      current = base[2] + base[0] + base[1] + base[3];
+    } else if (pass == 3) {
+      current = base[3] + base[0] + base[1] + base[2];
+    } else {
+	  console.error("Erroneous pass value");
+    }
+    
+    return current;
+  }
+  
   //sequentially attempts all possible permutations of each combination
   //until solved
   autoSolveSequential(event) {
@@ -229,18 +248,9 @@ class Game {
     for (let inference of inferences) {
       
       for (let i = 0; i < 4; i++) {
-        let base = inference;
         let current;
         
-        if (i == 0) {
-          current = base;
-        } else if (i == 1) {
-          current = base[1] + base[0] + base[2] + base[3];
-        } else if (i == 2) {
-          current = base[2] + base[0] + base[1] + base[3];
-        } else if (i == 3) {
-          current = base[3] + base[0] + base[1] + base[2];
-        }
+        current = this.shiftBase(inference, i);
         
         solved = this.verifyEntry(current);
         for (let j = 0; j < 3; j++) {
@@ -285,18 +295,9 @@ class Game {
     for (let inference of inferences) {
       
       for (let i = 0; i < 4; i++) {
-        let base = inference;
         let current;
         
-        if (i == 0) {
-          current = base;
-        } else if (i == 1) {
-          current = base[1] + base[0] + base[2] + base[3];
-        } else if (i == 2) {
-          current = base[2] + base[0] + base[1] + base[3];
-        } else if (i == 3) {
-          current = base[3] + base[0] + base[1] + base[2];
-        }
+        current = this.shiftBase(inference, i);
         
         permutations.push(current);
         for (let j = 0; j < 3; j++) {
