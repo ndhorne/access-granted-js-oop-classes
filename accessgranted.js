@@ -233,7 +233,7 @@ class Game {
     } else if (pass == 3) {
       current = base[3] + base[0] + base[1] + base[2];
     } else {
-	  console.error("Erroneous pass value");
+      console.error("Erroneous pass value");
     }
     
     return current;
